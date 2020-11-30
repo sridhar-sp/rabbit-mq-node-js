@@ -1,0 +1,28 @@
+{
+  "name": "ls",
+  "version": "1.0.0",
+  "description": "Demonstrate the usage of Rabbit-MQ from node js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc",
+    "start": "tsc && node build/app.js",
+    "dev": "tsnd --respawn ./src/app.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/half-blood-prince/rabbit-mq-node-js.git"
+  },
+  "author": "Sridhar Subramani",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/half-blood-prince/rabbit-mq-node-js/issues"
+  },
+  "homepage": "https://github.com/half-blood-prince/rabbit-mq-node-js#readme",
+  "dependencies": {
+    "typescript": "^4.1.2"
+  },
+  "devDependencies": {
+    "ts-node-dev": "^1.0.0"
+  }
+}
