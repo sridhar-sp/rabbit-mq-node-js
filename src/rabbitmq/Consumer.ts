@@ -107,9 +107,13 @@ class Producer {
                 if (err) {
                   throw new Error(err);
                 }
-                channel.consume(queue, (msg: Message | null) => {
-                  logger.log(`Consumed the message ${msg?.content}`);
-                });
+                channel.consume(
+                  queue,
+                  (msg: Message | null) => {
+                    logger.log(`Consumed the message ${msg?.content}`);
+                  },
+                  { noAck: true }
+                );
               }
             );
           })
