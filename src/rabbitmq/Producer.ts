@@ -1,6 +1,6 @@
 import amqp, { Channel, Connection, Replies } from "amqplib/callback_api";
 import logger from "../logger/logger";
-class Consumer {
+class Producer {
   private host: String;
   private port: number;
   private channel: Channel | null;
@@ -106,4 +106,4 @@ class Consumer {
   }
 }
 
-export default Consumer;
+export default Producer;

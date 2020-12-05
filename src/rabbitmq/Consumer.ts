@@ -5,17 +5,19 @@ import amqp, {
   Replies,
 } from "amqplib/callback_api";
 import logger from "../logger/logger";
-class Producer {
+class Consumer {
+  private consumerName: String;
   private host: String;
   private port: number;
   private channel: Channel | null;
   private connection: Connection | null;
 
-  constructor(host: String, port: number) {
+  constructor(host: String, port: number, consumerName: String) {
     this.host = host;
     this.port = port;
     this.channel = null;
     this.connection = null;
+    this.consumerName = consumerName;
   }
 
   private getConnection(): Promise<Connection> {
@@ -110,7 +112,9 @@ class Producer {
                 channel.consume(
                   queue,
                   (msg: Message | null) => {
-                    logger.log(`Consumed the message ${msg?.content}`);
+                    logger.log(
+                      `Consumer ${this.consumerName} received the message ${msg?.content}`
+                    );
                   },
                   { noAck: true }
                 );
@@ -126,4 +130,4 @@ class Producer {
   }
 }
 
-export default Producer;
+export default Consumer;

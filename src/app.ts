@@ -7,9 +7,25 @@ const app = express();
 const PORT = 3000;
 
 const producer = new Producer(config.RABBIT_MQ_HOST, config.RABBIT_MQ_PORT);
-const consumer = new Consumer(config.RABBIT_MQ_HOST, config.RABBIT_MQ_PORT);
+const consumerOne = new Consumer(
+  config.RABBIT_MQ_HOST,
+  config.RABBIT_MQ_PORT,
+  "Consumer One"
+);
+const consumerTwo = new Consumer(
+  config.RABBIT_MQ_HOST,
+  config.RABBIT_MQ_PORT,
+  "Consumer Two"
+);
+const consumerThree = new Consumer(
+  config.RABBIT_MQ_HOST,
+  config.RABBIT_MQ_PORT,
+  "Consumer Three"
+);
 
-consumer.consumeFromQueue("first_queu");
+consumerOne.consumeFromQueue("first_queu");
+consumerTwo.consumeFromQueue("first_queu");
+consumerThree.consumeFromQueue("first_queu");
 
 app.get("/", (req: express.Request, res: express.Response) => {
   res.send("Welcome ");
