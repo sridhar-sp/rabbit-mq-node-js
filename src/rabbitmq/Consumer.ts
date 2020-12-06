@@ -113,7 +113,7 @@ class Consumer {
                   queue,
                   (msg: Message | null) => {
                     logger.log(
-                      `Consumer ${this.consumerName} received the message ${msg?.content}`
+                      `Consumer ${this.consumerName} from process ${process.pid} received the message ${msg?.content}`
                     );
                   },
                   { noAck: true }
