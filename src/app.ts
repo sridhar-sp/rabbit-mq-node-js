@@ -3,6 +3,7 @@ import Producer from "./rabbitmq/Producer";
 import Consumer from "./rabbitmq/Consumer";
 import config from "./config/config";
 import logger from "./logger/logger";
+import swaggerMiddleware from "./swagger/swagger";
 
 const app = express();
 const PORT = 3000;
@@ -28,12 +29,28 @@ const consumerThree = new Consumer(
 // consumerTwo.consumeFromQueue("first_queu");
 // consumerThree.consumeFromQueue("first_queu");
 
+app.use("/api-docs", swaggerMiddleware.ui, swaggerMiddleware.doc);
 app.get("/", (req: express.Request, res: express.Response) => {
   res.send(
     `Welcome, Application is running at ${PORT} at process ${process.pid}`
   );
 });
 
+/**
+ * @swagger
+ * /send/{message}:
+ *   get:
+ *     description: Send a message
+ *     parameters:
+ *      - in : path
+ *        name : message
+ *        schema :
+ *          type: string
+ *        required: true
+ *     responses:
+ *       200:
+ *         description: Message sent status succes {status_bool}
+ */
 app.get(
   "/send/:message/",
   async (req: express.Request, res: express.Response) => {
@@ -45,6 +62,25 @@ app.get(
   }
 );
 
+/**
+ * @swagger
+ * /sendDelayedMessage/{message}/{timeInMillis}:
+ *   get:
+ *     description: Send a message
+ *     parameters:
+ *      - in : path
+ *        name : message
+ *        schema :
+ *          type: string
+ *        required: true
+ *      - in : path
+ *        name : timeInMillis
+ *        schema :
+ *          type : integer
+ *     responses:
+ *       200:
+ *         description: Message sent status succes {status_bool}
+ */
 app.get(
   "/sendDelayedMessage/:message/:timeInMillis",
   async (req: express.Request, res: express.Response) => {

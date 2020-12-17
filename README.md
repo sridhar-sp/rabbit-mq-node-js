@@ -6,7 +6,7 @@ A sample project demonstrating how to achieve a delayed task execution using Rab
 
 ## Requirements
 
-For development, you will only need Node.js and npm installed in your environement.
+For development, you will need Node.js, npm and RabbitMQ installed in your environement.
 
 ## Install
 
