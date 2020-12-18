@@ -24,14 +24,6 @@ class Producer extends AMQBBase {
         this.channel?.sendToQueue(INTERMEDIATE_QUEUE, Buffer.from(data), {
           expiration: delayInMills,
         });
-
-        this.channel?.consume(
-          queueName,
-          (msg: Message | null) => {
-            logger.log(`Consumer from process ${process.pid} received the message ${msg?.content} in ${queueName}`);
-          },
-          { noAck: true }
-        );
       })
       .catch((error: Error) => {
         logger.log(`Error while trying to send delayed message. Process id ${process.pid}`);

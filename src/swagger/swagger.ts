@@ -16,6 +16,7 @@ const options = {
 const swaggerSpecification = swaggerJsdoc(options);
 
 export default {
+  swaggerSpecification: swaggerSpecification,
   ui: swaggerUi.serve,
   doc: swaggerUi.setup(swaggerSpecification, { explorer: true }),
 };
