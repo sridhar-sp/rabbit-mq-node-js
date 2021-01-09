@@ -6,7 +6,7 @@ import logger from "./logger/logger";
 import swaggerMiddleware from "./swagger/swagger";
 
 const app = express();
-const PORT = 3000;
+const PORT = config.PORT;
 
 const producer = Producer.create(config.RABBIT_MQ_URL!!);
 
