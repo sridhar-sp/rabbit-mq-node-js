@@ -8,7 +8,7 @@ import swaggerMiddleware from "./swagger/swagger";
 const app = express();
 const PORT = 3000;
 
-const producer = new Producer(config.RABBIT_MQ_HOST, config.RABBIT_MQ_PORT);
+const producer = Producer.create(config.RABBIT_MQ_URL!!);
 
 app.use("/api-docs", swaggerMiddleware.ui, swaggerMiddleware.doc);
 app.use("/api-docs.json", (req: express.Request, res: express.Response) => {
@@ -73,7 +73,7 @@ app.get(
     const queueName: string = req.params.queueName;
     const message: string = req.params.message;
     const timeInMillis: number = parseInt(req.params.timeInMillis);
-    producer.sendDeleayeMessageToQueueV1(queueName, timeInMillis, message);
+    producer.sendDelayedMessageToQueue(queueName, timeInMillis, message);
     res.send(`Initiated the delayed nessage, this request handled in process ${process.pid}`);
   }
 );
@@ -103,8 +103,8 @@ app.get(
 app.get("/setupConsumer/:consumerName/:queueName", async (req: express.Request, res: express.Response) => {
   const consumerName: string = req.params.consumerName;
   const queueName: string = req.params.queueName;
-  const consumer = new Consumer(config.RABBIT_MQ_HOST, config.RABBIT_MQ_PORT, consumerName);
-  consumer.consumeFromQueue(queueName);
+  const consumer: Consumer = Consumer.create(config.RABBIT_MQ_URL!!);
+  consumer.consume(queueName);
 
   res.send(`Consumer setup initiated, this request handled in process ${process.pid}`);
 });
