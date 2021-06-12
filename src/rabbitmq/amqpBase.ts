@@ -1,8 +1,8 @@
-import amqp, { Channel, Connection, Options, Replies, Message } from "amqplib/callback_api";
-
+import amqp, { Channel, Connection, Options, Replies } from "amqplib/callback_api";
 import logger from "../logger/logger";
 
 class AMQPBase {
+  private static TAG = "AMQPBase";
   private url: string;
   protected channel: Channel | null;
   private connection: Connection | null;
@@ -39,22 +39,18 @@ class AMQPBase {
         return;
       }
 
-      let connection: Connection;
-      try {
-        connection = await this.getConnection();
-      } catch (e: any) {
-        reject(Error("Could not get the rabbit mq connection object"));
-        return;
-      }
-
-      connection.createChannel((err: any, channel: Channel) => {
-        if (err) {
-          reject(new Error(err));
-          return;
-        }
-        this.channel = channel;
-        resolve(channel);
-      });
+      this.getConnection()
+        .then((conn) => {
+          conn.createChannel((err: any, channel: Channel) => {
+            if (err) {
+              reject(new Error(err));
+              return;
+            }
+            this.channel = channel;
+            resolve(channel);
+          });
+        })
+        .catch((error) => logger.logError(AMQPBase.TAG, error));
     });
   }
 
@@ -114,5 +110,4 @@ class AMQPBase {
     this.connection?.close;
   }
 }
-
 export default AMQPBase;

@@ -1,6 +1,5 @@
-import amqp, { Channel, Connection, Message, Replies } from "amqplib/callback_api";
 import AMQBBase from "./amqpBase";
-import logger from "../logger/logger";
+import { Message } from "amqplib/callback_api";
 
 class Consumer extends AMQBBase {
   public static create(url: string): Consumer {
@@ -10,19 +9,36 @@ class Consumer extends AMQBBase {
   private constructor(url: string) {
     super(url);
   }
-  public consume(queue: string) {
-    this.assertQueue(queue, {})
+  // public consume(queue: string, handler: (payload: string) => void) {
+  //   //To-Do. Check whether to add assertExchange and bindQueue inside this method.
+  //   this.assertQueue(queue, {}).then((_) => {
+  //     this.channel?.consume(
+  //       queue,
+  //       (msg: Message | null) => {
+  //         handler(msg?.content ? msg?.content.toString() : "");
+  //       },
+  //       { noAck: true }
+  //     );
+  //   });
+  // }
+
+  public consume(queue: string, handler: (payload: string) => void) {
+    //To-Do. Check whether to add assertExchange and bindQueue inside this method.
+    const FINAL_QUEUE = queue;
+    const FINAL_EXCHANGE = `${queue}_FINAL_EXCHANGE`;
+    const FINAL_EXCHANGE_TYPE = "fanout";
+
+    this.assertExchange(FINAL_EXCHANGE, FINAL_EXCHANGE_TYPE)
+      .then((_) => this.assertQueue(queue, {}))
+      .then((_) => this.bindQueue(FINAL_QUEUE, FINAL_EXCHANGE, ""))
       .then((_) => {
         this.channel?.consume(
           queue,
           (msg: Message | null) => {
-            logger.log(`Consumer from process ${process.pid} received the message ${msg?.content}`);
+            handler(msg?.content ? msg?.content.toString() : "");
           },
           { noAck: true }
         );
-      })
-      .catch((error) => {
-        logger.log(`Error while consuming : ${error}`);
       });
   }
 }

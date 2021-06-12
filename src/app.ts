@@ -20,27 +20,6 @@ app.get("/", (req: express.Request, res: express.Response) => {
 
 /**
  * @swagger
- * /send/{message}:
- *   get:
- *     description: Send a message
- *     parameters:
- *      - in : path
- *        name : message
- *        schema :
- *          type: string
- *        required: true
- *     responses:
- *       200:
- *         description: Message sent status succes {status_bool}
- */
-app.get("/send/:message/", async (req: express.Request, res: express.Response) => {
-  const message: string = req.params.message;
-  const status = await producer.sendToQueue("first_queu", message);
-  res.send(`Message sent status success = ${status}, this request handled in process ${process.pid}`);
-});
-
-/**
- * @swagger
  * /sendDelayedMessage/{queueName}/{message}/{timeInMillis}:
  *   get:
  *     description: Send a message
@@ -104,7 +83,13 @@ app.get("/setupConsumer/:consumerName/:queueName", async (req: express.Request, 
   const consumerName: string = req.params.consumerName;
   const queueName: string = req.params.queueName;
   const consumer: Consumer = Consumer.create(config.RABBIT_MQ_URL!!);
-  consumer.consume(queueName);
+  consumer.consume(queueName, (payload) => {
+    logger.log(`Consumer from process ${process.pid} received the message ${payload}`);
+  });
+
+  Consumer.create(config.RABBIT_MQ_URL!!).consume(queueName, (payload) => {
+    logger.log(`**** Consumer from process ${process.pid} received the message ${payload} ***`);
+  });
 
   res.send(`Consumer setup initiated, this request handled in process ${process.pid}`);
 });

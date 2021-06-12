@@ -1,8 +1,9 @@
 import cluster from "cluster";
 import os from "os";
 import logger from "./logger/logger";
+import config from "./config/config";
 
-if (cluster.isMaster) {
+if (config.IS_CLUSTER_MODE_ENABLED && cluster.isMaster) {
   logger.log("Master node called");
   const numOfCores = os.cpus().length;
   logger.log(`${numOfCores} available`);
@@ -19,7 +20,9 @@ if (cluster.isMaster) {
   });
 
   cluster.on("exit", (worker, code, signal) => {
-    logger.log(`Worker ${worker.process.pid} died with code: ${code} and signal: ${signal}`);
+    logger.log(
+      `Worker ${worker.process.pid} died with code: ${code} and signal: ${signal}`
+    );
     if (code !== 0) {
       console.log("Starting a new worker");
       cluster.fork();
