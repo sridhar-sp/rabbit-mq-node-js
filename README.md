@@ -48,3 +48,7 @@ queueName    : The queue to consume the delayed message
 message      : Actual message payload
 timeInMillis : Delay in milliseconds, after this delay the message will be delivered to the queue addressd by the queueName
 ```
+
+## Demo
+
+<img src="docs/demo.gif">

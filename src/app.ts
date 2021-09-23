@@ -15,7 +15,7 @@ app.use("/api-docs.json", (req: express.Request, res: express.Response) => {
   res.send(swaggerMiddleware.swaggerSpecification);
 });
 app.get("/", (req: express.Request, res: express.Response) => {
-  res.send(`Welcome, Application is running at ${PORT} at process ${process.pid}`);
+  res.send(`Welcome, Application is running at ${PORT} at process ${process.pid}\n`);
 });
 
 /**
@@ -53,7 +53,7 @@ app.get(
     const message: string = req.params.message;
     const timeInMillis: number = parseInt(req.params.timeInMillis);
     producer.sendDelayedMessageToQueue(queueName, timeInMillis, message);
-    res.send(`Initiated the delayed nessage, this request handled in process ${process.pid}`);
+    res.send(`Initiated the delayed nessage, this request handled in process ${process.pid}\n`);
   }
 );
 
@@ -88,14 +88,14 @@ app.get("/setupConsumer/:consumerName/:queueName", async (req: express.Request, 
   });
 
   Consumer.create(config.RABBIT_MQ_URL!!).consume(queueName, (payload) => {
-    logger.log(`**** Consumer from process ${process.pid} received the message ${payload} ***`);
+    logger.log(`Consumer from process ${process.pid} received the message ${payload}`);
   });
 
-  res.send(`Consumer setup initiated, this request handled in process ${process.pid}`);
+  res.send(`Consumer setup initiated, this request handled in process ${process.pid} \n`);
 });
 
 app.listen(PORT, () => {
-  console.log(`Application is running at ${PORT} at process ${process.pid}`);
+  console.log(`Application is running at ${PORT} at process ${process.pid} \n`);
 });
 
 logger.log("Application instance created");
