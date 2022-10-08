@@ -84,7 +84,7 @@ app.get("/setupConsumer/:consumerName/:queueName", async (req: express.Request, 
   const queueName: string = req.params.queueName;
   const consumer: Consumer = Consumer.create(config.RABBIT_MQ_URL!!);
   consumer.consume(queueName, (payload) => {
-    logger.log(`Consumer from process ${process.pid} received the message ${payload}`);
+    logger.log(`Consumer from process ${process.pid} received the message ${payload} at at ${new Date().toTimeString()}`);
   });
 
   Consumer.create(config.RABBIT_MQ_URL!!).consume(queueName, (payload) => {
